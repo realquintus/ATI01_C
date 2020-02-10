@@ -33,20 +33,98 @@ void prompt_tab(int** T,int nb_l,int nb_c){
 		printf("\n");
 	}
 }
+
+void add_tab(int** T1,int l1,int c1,int** T2,int l2,int c2,int** C,int max_l, int max_c){
+	int i,j;
+	//printf("test");
+	for (i=0;i<l1;i++){	
+		for (j=0;j<c1;j++){
+			//printf("test");
+			C[i][j]=T1[i][j]+T2[i][j];
+		}
+	}}
+}
+void mult_tab(int** T1,int l1,int c1,int** T2,int l2,int c2,int** C){
+		int i,j,k;
+		//printf("test");
+		for (i=0;i<l1;i++){	
+			for (j=0;j<c1;j++){
+				for (k=0;k<c1;k++){
+					C[i][j] += T1[i][k]*T2[k][j];
+					//printf("%d * %d = %d \n",T1[i][k],T2[k][j],C[i][j]);
+				}
+			}
+		}
+}
 int main(void)
 {
-   printf("Que voulez vous faire?\nAffichage matrice: A\nAddition matrices: +\nMultiplication matrices: *\ntrace matrice: T\nDeterminant matrice: D\n");
-   scanf()
-   printf("** Matrice A **");
-   int in_l;
-   int in_c;
+   char option;
+   printf("Que voulez vous faire?\nAffichage matrice: a\nAddition matrices: b\nMultiplication matrices: c\ntrace matrice: d\nDeterminant matrice: e\n#");
+   scanf("%c",&option);
+   getchar();
+   if ((option == 'c') || (option == 'b')){
+   	printf("** Matrice A **\n");
+   }
+////////////////////////////////////////////////////
+   int in_l1;
+   int in_c1;
+   int in_l2;
+   int in_c2;
    printf("Nombre de lignes: ");
-   scanf("%d",&in_l);
+   scanf("%d",&in_l1);
    printf("Nombre de colonne: ");
-   scanf("%d",&in_c);
+   scanf("%d",&in_c1);
    int** A;
-   A=create_tab(in_l,in_c);
-   fill_tab(A,in_l,in_c);
-   prompt_tab(A,in_l,in_c);
-   delete_tab(A,in_l,in_c);
+   int** B;
+   A=create_tab(in_l1,in_c1);
+   fill_tab(A,in_l1,in_c1);
+///////////////////////////////////////////////////
+   if ((option == 'c') || (option == 'b')){
+   	printf("\n** Matrice B **\n");
+   	printf("Nombre de lignes: ");
+  	scanf("%d",&in_l2);
+   	printf("Nombre de colonne: ");
+  	scanf("%d",&in_c2);
+   	B=create_tab(in_l2,in_c2);
+   	fill_tab(B,in_l2,in_c2);
+   	printf("\n ** Matrice A **\n");
+   	prompt_tab(A,in_l1,in_c1);
+///////////////////////////////////////////////////
+   	printf("\n** Matrice B **\n");
+   	prompt_tab(B,in_l2,in_c2);
+	int max_c,max_l;
+	if (option == 'b'){
+		if (in_c1<in_c2){
+			max_c=in_c2;
+		}
+		else{
+			max_c=in_c1;
+		}
+		if (in_l1<in_l2){
+			max_l=in_l2;
+		}
+		else{
+			max_l=in_l1;
+		}
+		int** C=create_tab(max_l,max_c);
+		add_tab(A,in_l1,in_c1,B,in_l2,in_c2,C,max_l,max_c);
+		printf("\n** Somme **\n");
+		prompt_tab(C,in_l1,in_c1);
+		delete_tab(C,in_c1,in_l1);
+	}
+	if (option == 'c'){
+		if (in_c1 == in_l2 ){
+			int** C=create_tab(in_c1,in_l2);
+			mult_tab(A,in_l1,in_c1,B,in_l2,in_c2,C);
+			printf("\n** Multiplication **\n");
+			prompt_tab(C,in_l1,in_c1);
+			delete_tab(C,in_c1,in_l2);
+		}
+		else{
+			printf("Le nombre de colonnes de A doit être égal au nombre de lignes de B");
+		}
+	}
+	delete_tab(B,in_l2,in_c2);
+   }
+   delete_tab(A,in_l1,in_c1);
 }
