@@ -33,8 +33,7 @@ void prompt_tab(int** T,int nb_l,int nb_c){
 		printf("\n");
 	}
 }
-
-void add_tab(int** T1,int l1,int c1,int** T2,int l2,int c2,int** C,int max_l, int max_c){
+void add_tab(int** T1,int l1,int c1,int** T2,int l2,int c2,int** C){
 	int i,j;
 	//printf("test");
 	for (i=0;i<l1;i++){	
@@ -42,7 +41,7 @@ void add_tab(int** T1,int l1,int c1,int** T2,int l2,int c2,int** C,int max_l, in
 			//printf("test");
 			C[i][j]=T1[i][j]+T2[i][j];
 		}
-	}}
+	}
 }
 void mult_tab(int** T1,int l1,int c1,int** T2,int l2,int c2,int** C){
 		int i,j,k;
@@ -56,6 +55,30 @@ void mult_tab(int** T1,int l1,int c1,int** T2,int l2,int c2,int** C){
 			}
 		}
 }
+int trace_tab(int** T,int l,int c){
+	int i,j,trace=0;
+	for (i=0;i<l;i++){
+		for (j=0;j<c;j++){
+			if (i == j){
+				trace += T[i][j];
+			}
+		}
+	}
+	return trace;
+}
+void det_tab(int** T,int l,int c){
+		int i,j,k,det;
+		if (l == 2){
+			det=T[0][0]*T[1][1]-T[0][1]*T[1][0]
+		}
+		for (i=0;i<l;i++){
+			for (j=0;j<c;j++){
+				for (k=0;k<c;k++){
+					det += T[0][j]*det;
+				}
+			}
+		}
+	}
 int main(void)
 {
    char option;
@@ -89,28 +112,20 @@ int main(void)
    	fill_tab(B,in_l2,in_c2);
    	printf("\n ** Matrice A **\n");
    	prompt_tab(A,in_l1,in_c1);
-///////////////////////////////////////////////////
+
    	printf("\n** Matrice B **\n");
    	prompt_tab(B,in_l2,in_c2);
-	int max_c,max_l;
 	if (option == 'b'){
-		if (in_c1<in_c2){
-			max_c=in_c2;
+		if ((in_l1 == in_l2) && (in_c1 == in_c2)){
+			int** C=create_tab(in_c1,in_l1);
+			add_tab(A,in_l1,in_c1,B,in_l2,in_c2,C);
+			printf("\n** Somme **\n");
+			prompt_tab(C,in_l1,in_c1);
+			delete_tab(C,in_c1,in_l1);
 		}
 		else{
-			max_c=in_c1;
+			printf("\nLes deux matrices de sont pas de même dimensions.");
 		}
-		if (in_l1<in_l2){
-			max_l=in_l2;
-		}
-		else{
-			max_l=in_l1;
-		}
-		int** C=create_tab(max_l,max_c);
-		add_tab(A,in_l1,in_c1,B,in_l2,in_c2,C,max_l,max_c);
-		printf("\n** Somme **\n");
-		prompt_tab(C,in_l1,in_c1);
-		delete_tab(C,in_c1,in_l1);
 	}
 	if (option == 'c'){
 		if (in_c1 == in_l2 ){
@@ -125,6 +140,12 @@ int main(void)
 		}
 	}
 	delete_tab(B,in_l2,in_c2);
-   }
+  }
+/////////////////////////////////////////////////////////////////////////////
+	if (option == 'd'){
+		int trace;
+		trace=trace_tab(A,in_l1,in_c1);
+		printf("Trace = %d",trace);
+	}
    delete_tab(A,in_l1,in_c1);
 }
