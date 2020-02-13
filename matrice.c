@@ -66,19 +66,52 @@ int trace_tab(int** T,int l,int c){
 	}
 	return trace;
 }
-void det_tab(int** T,int l,int c){
-		int i,j,k,det;
-		if (l == 2){
-			det=T[0][0]*T[1][1]-T[0][1]*T[1][0]
-		}
-		for (i=0;i<l;i++){
-			for (j=0;j<c;j++){
-				for (k=0;k<c;k++){
-					det += T[0][j]*det;
+int** make_matr(int** T,int size,int del_l){
+	int i,j,k=0,new_size=size-1;
+	int** new_T;
+	new_size=size-1;
+	new_T=create_tab(new_size,new_size);
+	//printf("size=%d,new_size=%d,del_l=%d\n",size,new_size,del_l);
+	for (i=1;i<size;i++){
+			k=0;
+			for (j=0;j<size;j++){
+				if (j == del_l){
+				//	printf("i=%d,j=%d,k=%d\n\n\n",i,j,k);
+				}
+				else{
+				//	printf("k=%d \n",k);
+					//printf("i=%d,j=%d,k=%d\n",i,j,k);
+					//printf("%d ",T[i][j]);
+					new_T[i-1][k]=T[i][j];
+					k+=1;
 				}
 			}
-		}
+		//printf("\n");
 	}
+	//prompt_tab(new_T,new_size,new_size);
+	return new_T;
+}
+int det_tab(int** T,int l){
+	int i,det=0;
+	//printf("\n%d\n");
+	if (l == 2){
+		//printf("det=%d*%d-(%d*%d)",T[0][0],T[1][1],T[0][1],T[1][0]);
+		det=T[0][0]*T[1][1]-(T[0][1]*T[1][0]);
+		//printf("=%d\n",det);
+		return det;
+	}
+	else{
+		for (i=0;i<l;i++){
+			if ( i%2 == 0){
+				det=det - T[0][i]*det_tab(make_matr(T,l,i),l-1);
+			}
+			else{
+				det=det + T[0][i]*det_tab(make_matr(T,l,i),l-1);
+			}
+		}
+		return det;
+	}
+}
 int main(void)
 {
    char option;
@@ -146,6 +179,16 @@ int main(void)
 		int trace;
 		trace=trace_tab(A,in_l1,in_c1);
 		printf("Trace = %d",trace);
+	}
+	if (option == 'e'){
+		if (in_l1 == in_c1){
+			int det;
+			det=det_tab(A,in_l1);
+			printf("Determinant = %d",det);
+		}
+		else{
+			printf("Le déterminant est uniquement calculable sur une matrice carrée.");
+		}
 	}
    delete_tab(A,in_l1,in_c1);
 }
