@@ -66,7 +66,7 @@ int trace_tab(int** T,int l,int c){
 	}
 	return trace;
 }
-int** make_matr(int** T,int size,int del_l){
+int** reduce_tab(int** T,int size,int del_l){
 	int i,j,k=0,new_size=size-1;
 	int** new_T;
 	new_size=size-1;
@@ -98,19 +98,21 @@ int det_tab(int** T,int l){
 		//printf("det=%d*%d-(%d*%d)",T[0][0],T[1][1],T[0][1],T[1][0]);
 		det=T[0][0]*T[1][1]-(T[0][1]*T[1][0]);
 		//printf("=%d\n",det);
-		return det;
+	}
+	else if (l == 1){
+		det=0;
 	}
 	else{
 		for (i=0;i<l;i++){
 			if ( i%2 == 0){
-				det=det - T[0][i]*det_tab(make_matr(T,l,i),l-1);
+				det=det - T[0][i]*det_tab(reduce_tab(T,l,i),l-1);
 			}
 			else{
-				det=det + T[0][i]*det_tab(make_matr(T,l,i),l-1);
+				det=det + T[0][i]*det_tab(reduce_tab(T,l,i),l-1);
 			}
 		}
-		return det;
 	}
+	return det;
 }
 int main(void)
 {
