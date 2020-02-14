@@ -1,5 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+
+// Demander à druon si l'espace mémoire de mes tableaux de la fonction reduce_tab sont supprimé
+
+// Permet d'allouer de l'espace mémoire à une matrice
 int** create_tab(int nb_l, int nb_c){
 	int** T;
 	int i;
@@ -9,12 +13,14 @@ int** create_tab(int nb_l, int nb_c){
 	}
 	return T;
 }
+// Supprime une matrice
 void delete_tab(int** T, int nb_l, int nb_c){
 	int i;
 	for (i=0;i<nb_l;i++){
 		free(T[i]);
 	}
 }
+// Remplis une matrice en demandant à l'utilisateur
 void fill_tab(int** T,int nb_l,int nb_c){
 	int i,j;
 	for (i=0;i<nb_l;i++){
@@ -24,6 +30,7 @@ void fill_tab(int** T,int nb_l,int nb_c){
 		}
 	}
 }
+// Affiche une matrice
 void prompt_tab(int** T,int nb_l,int nb_c){
 	int i,j;
 	for (i=0;i<nb_l;i++){
@@ -33,28 +40,27 @@ void prompt_tab(int** T,int nb_l,int nb_c){
 		printf("\n");
 	}
 }
+// AJoute 2 matrices
 void add_tab(int** T1,int l1,int c1,int** T2,int l2,int c2,int** C){
 	int i,j;
-	//printf("test");
 	for (i=0;i<l1;i++){	
 		for (j=0;j<c1;j++){
-			//printf("test");
 			C[i][j]=T1[i][j]+T2[i][j];
 		}
 	}
 }
+// Multiplie 2 matrices
 void mult_tab(int** T1,int l1,int c1,int** T2,int l2,int c2,int** C){
 		int i,j,k;
-		//printf("test");
 		for (i=0;i<l1;i++){	
 			for (j=0;j<c1;j++){
 				for (k=0;k<c1;k++){
 					C[i][j] += T1[i][k]*T2[k][j];
-					//printf("%d * %d = %d \n",T1[i][k],T2[k][j],C[i][j]);
 				}
 			}
 		}
 }
+// Calcul la trace d'une matrice
 int trace_tab(int** T,int l,int c){
 	int i,j,trace=0;
 	for (i=0;i<l;i++){
@@ -66,38 +72,30 @@ int trace_tab(int** T,int l,int c){
 	}
 	return trace;
 }
+// Reduis une matrice en supprimant la ligne 0 et la colonne del_l donné en argument
 int** reduce_tab(int** T,int size,int del_l){
 	int i,j,k=0,new_size=size-1;
 	int** new_T;
 	new_size=size-1;
 	new_T=create_tab(new_size,new_size);
-	//printf("size=%d,new_size=%d,del_l=%d\n",size,new_size,del_l);
 	for (i=1;i<size;i++){
 			k=0;
 			for (j=0;j<size;j++){
 				if (j == del_l){
-				//	printf("i=%d,j=%d,k=%d\n\n\n",i,j,k);
 				}
 				else{
-				//	printf("k=%d \n",k);
-					//printf("i=%d,j=%d,k=%d\n",i,j,k);
-					//printf("%d ",T[i][j]);
 					new_T[i-1][k]=T[i][j];
 					k+=1;
 				}
 			}
-		//printf("\n");
 	}
-	//prompt_tab(new_T,new_size,new_size);
 	return new_T;
 }
+// Calcul le déterminant d'une matrice
 int det_tab(int** T,int l){
 	int i,det=0;
-	//printf("\n%d\n");
 	if (l == 2){
-		//printf("det=%d*%d-(%d*%d)",T[0][0],T[1][1],T[0][1],T[1][0]);
 		det=T[0][0]*T[1][1]-(T[0][1]*T[1][0]);
-		//printf("=%d\n",det);
 	}
 	else if (l == 1){
 		det=0;
@@ -137,6 +135,10 @@ int main(void)
    A=create_tab(in_l1,in_c1);
    fill_tab(A,in_l1,in_c1);
 ///////////////////////////////////////////////////
+   if (option == 'a'){
+	printf("\n** Matrice **\n");
+	prompt_tab(A,in_l1,in_c1);
+   }
    if ((option == 'c') || (option == 'b')){
    	printf("\n** Matrice B **\n");
    	printf("Nombre de lignes: ");
