@@ -4,57 +4,62 @@ typedef struct{
 	int nb_coef;
 	int* P;
 } Poly;
-void ask_poly(Poly *X){
+// Fonctions d'interaction avec l'utilisateur
+Poly ask_poly(){
+	Poly X;
 	int i,temp;
 	printf("Nombre de coefficients:");
 	scanf("%d",&temp);
-	X->nb_coef = temp;
-	X->P = (int*) malloc(X->nb_coef * sizeof(int *));
+	X.nb_coef = temp;
+	X.P = (int*) malloc(X.nb_coef * sizeof(int *));
 	printf("\nEntrez les coefficents en commencant par le degré le plus haut.\n");
-	for (i=X->nb_coef;i>0;i--){
+	for (i=X.nb_coef;i>0;i--){
 		printf("x^%d:",i-1);
 		scanf("%d",&temp);
-		X->P[i] = temp;
+		X.P[i] = temp;
 	}
+	return X;
 }
-void print_poly(Poly *X){
+void print_poly(Poly X){
 	int i;
-	for (i=X->nb_coef;i>0;i--){
-		if (X->nb_coef == 1){
-			printf("%d",X->P[i]);
+	for (i=X.nb_coef;i>0;i--){
+		if (X.nb_coef == 1){
+			printf("%d",X.P[i]);
 		}
 		else if (i == 2){
-			if (X->P[i] > 0){
-				printf("+%dx",X->P[i]);
+			if (X.P[i] > 0){
+				printf("+%dx",X.P[i]);
 			}
 			else{
-				printf("%dx",X->P[i]);	
+				printf("%dx",X.P[i]);	
 			}
 			
 		}
-		else if (i == X->nb_coef && X->P[i] > 0){
-			printf("%dx^%d",X->P[i],i-1);
+		else if (i == X.nb_coef && X.P[i] > 0){
+			printf("%dx^%d",X.P[i],i-1);
 		}
 		else if (i == 1){
-			if (X->P[i] > 0){
-				printf("+%d",X->P[i]);
+			if (X.P[i] > 0){
+				printf("+%d",X.P[i]);
 			}
 			else{
-				printf("%d",X->P[i]);	
+				printf("%d",X.P[i]);	
 			}
 		}
-		else if (X->P[i] > 0){
-			printf("+%dx^%d",X->P[i],i-1);
+		else if (X.P[i] > 0){
+			printf("+%dx^%d",X.P[i],i-1);
 		}
 		else{
-			printf("%dx^%d",X->P[i],i-1);
+			printf("%dx^%d",X.P[i],i-1);
 		}
 	}
 }
-int eval_poly(Poly *X,int x){
+//////////////////////////
+// Fonctions math //
+int eval_poly(Poly X,int x){
 	int i,eval,monome,j;
-	for (i=X->nb_coef;i>0;i--){
-		monome=X->P[i];
+	for (i=X.nb_coef;i>0;i--){
+		monome=X.P[i];
 		// Calcul de l'exposant
 		for (j=0;j<(i-1);j++){
 			monome*=x;
@@ -63,13 +68,13 @@ int eval_poly(Poly *X,int x){
 	}
 	return eval;
 }
-Poly deriv_poly(Poly *X){
+Poly deriv_poly(Poly X){
 	Poly dX;
 	int i;
-	dX.nb_coef = X->nb_coef - 1;
+	dX.nb_coef = X.nb_coef - 1;
 	dX.P = (int*) malloc(dX.nb_coef * sizeof(int *));
 	for (i=dX.nb_coef;i>0;i--){
-		dX.P[i] = X->P[i+1]*i;
+		dX.P[i] = X.P[i+1]*i;
 	}
 	return dX; 
 }
@@ -114,57 +119,61 @@ Poly prod_poly(Poly X, Poly X2){
 	}
 	return pX;
 }
+////////////////////////////////
+//
 int main(void){
 	char option;
 	printf("Que voulez-vous faire?\nAffichage polynôme: a\nEvaluer un polynôme: b\nCalculer un polynôme dérivé: c\nSomme de 2 polynômes: d\nProduit de 2 polynômes: e\nDivision euclidienne de 2 polynômes: f\n#");
 	scanf("%c",&option);
 	getchar(); 
 	Poly X;
+	// Options ne nécéssitant qu'un seul polynôme
 	if ((option == 'a') || (option == 'b') || (option == 'c')){	
-		ask_poly(&X);
+		X=ask_poly();
 		printf("f(x)=");
-		print_poly(&X);
+		print_poly(X);
 		printf("\n");
 		if (option == 'b'){
 			int x;
 			printf(" --> x=");
 			scanf("%d",&x);
-			int eval = eval_poly(&X,x);
+			int eval = eval_poly(X,x);
 			printf("f(%d)=%d\n",x,eval);
 		}
 		if (option == 'c'){
 			Poly dX;	
-			dX=deriv_poly(&X);
+			dX=deriv_poly(X);
 			printf("f'(x)=");
-			print_poly(&dX);
+			print_poly(dX);
 		}	
 	}
+	// Options nécéssitant deux polynôme
 	else if((option == 'd') || (option == 'e') || (option == 'f')){
 		printf("\n** Polynome f(x) **\n");
-		ask_poly(&X);
+		X=ask_poly();
 		Poly X2;
 		printf("\n** Polynome g(x) **\n");
-		ask_poly(&X2);
+		X2=ask_poly();
 		printf("f(x)=");
-		print_poly(&X);
+		print_poly(X);
 		printf("\n");
 		printf("g(x)=");
-		print_poly(&X2);
+		print_poly(X2);
 		printf("\n");
 		if (option == 'd'){
 			Poly sX;
 			sX=sum_poly(X,X2);
 			printf("f(x)+g(x)=");
-			print_poly(&sX);
+			print_poly(sX);
 		}
 		if (option == 'e'){
 			Poly pX;
 			pX=prod_poly(X,X2);
 			printf("f(x)*g(x)=");
-			print_poly(&pX);
+			print_poly(pX);
 		}
 	}
 	else{
 		printf("La valeur entrée ne correspond à aucune action.");
 	}
-}
+} 
