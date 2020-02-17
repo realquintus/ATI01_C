@@ -99,6 +99,21 @@ Poly sum_poly(Poly X,Poly X2){
 	}	
 	return sX;
 }
+Poly prod_poly(Poly X, Poly X2){
+	Poly pX;
+	int i,j,k;
+	pX.nb_coef = X.nb_coef + X2.nb_coef - 1;
+	pX.P = (int*) malloc(pX.nb_coef * sizeof(int *));
+	for (k=pX.nb_coef;k<0;i++){
+		pX.P[i] = 0;
+	}
+	for (i=X.nb_coef;i>0;i--){
+		for (j=X2.nb_coef;j>0;j--){
+			pX.P[i+j-1] += X.P[i]*X2.P[j];
+		}
+	}
+	return pX;
+}
 int main(void){
 	char option;
 	printf("Que voulez-vous faire?\nAffichage polynôme: a\nEvaluer un polynôme: b\nCalculer un polynôme dérivé: c\nSomme de 2 polynômes: d\nProduit de 2 polynômes: e\nDivision euclidienne de 2 polynômes: f\n#");
@@ -141,6 +156,12 @@ int main(void){
 			sX=sum_poly(X,X2);
 			printf("f(x)+g(x)=");
 			print_poly(&sX);
+		}
+		if (option == 'e'){
+			Poly pX;
+			pX=prod_poly(X,X2);
+			printf("f(x)*g(x)=");
+			print_poly(&pX);
 		}
 	}
 	else{
