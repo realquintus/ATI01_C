@@ -40,7 +40,7 @@ void prompt_tab(int** T,int nb_l,int nb_c){
 		printf("\n");
 	}
 }
-// AJoute 2 matrices
+// Ajoute 2 matrices
 void add_tab(int** T1,int l1,int c1,int** T2,int l2,int c2,int** C){
 	int i,j;
 	for (i=0;i<l1;i++){	
