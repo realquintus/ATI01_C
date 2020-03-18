@@ -119,6 +119,22 @@ Poly prod_poly(Poly X, Poly X2){
 	}
 	return pX;
 }
+Poly div_poly(Poly X,Poly X2){
+	Poly divX;
+	if (X.nb_coef > X2.nb_coef){
+		int i=0,j;
+		divX.nb_coef = X.nb_coef - X2.nb_coef;
+		divX.P = (int*) malloc(divX.nb_coef * sizeof(int *));
+		while(X.nb_coef-i>=X2.nb_coef){
+			divX.P[X.nb_coef-X2.nb_coef-i]=X.P[X.nb_coef-i]/X2.P[X2.nb_coef];//division
+           		for(j=i;j<=X2.nb_coef+i;j++){
+               			X.P[X.nb_coef-j]=X.P[X.nb_coef-j]-X2.P[X2.nb_coef-j]*divX.P[i];//reste
+           		}
+			i++;
+    		}
+	}	
+	return divX;
+}
 ////////////////////////////////
 //
 int main(void){
@@ -145,6 +161,7 @@ int main(void){
 			dX=deriv_poly(X);
 			printf("f'(x)=");
 			print_poly(dX);
+
 		}	
 	}
 	// Options nécéssitant deux polynôme
@@ -171,6 +188,12 @@ int main(void){
 			pX=prod_poly(X,X2);
 			printf("f(x)*g(x)=");
 			print_poly(pX);
+		}
+		if (option == 'f'){
+			Poly divX;
+			divX=div_poly(X,X2);
+			printf("f(x)/g(x)=");
+			print_poly(divX);
 		}
 	}
 	else{
