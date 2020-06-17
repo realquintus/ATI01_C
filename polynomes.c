@@ -21,36 +21,53 @@ Poly ask_poly(){
 	return X;
 }
 void print_poly(Poly X){
-	int i;
+	int i,counter;
+	counter=0;
 	for (i=X.nb_coef;i>0;i--){
-		if (X.nb_coef == 1){
-			printf("%d",X.P[i]);
+		if (X.P[i] == 0){
 		}
-		else if (i == 2){
-			if (X.P[i] > 0){
-				printf("+%dx",X.P[i]);
+		else{	
+			if (counter == 0 && X.P[i] > 0){
+			}
+			else if (X.P[i] > 0){
+				printf("+");
+			}
+			else if (X.P[i] < 0){
+			}
+			if (X.P[i] == 1){
+				if (i == 2){
+					printf("x");
+				}
+				else if (i == 1){
+					printf("1");
+				}
+				else{
+					printf("x^%d",i-1);
+				}
+			}
+			else if (X.P[i] == -1){
+				if (i == 2){
+					printf("-x");
+				}
+				else if (i == 1){
+					printf("-1");
+				}
+				else{
+					printf("-x^%d",i-1);
+				}
 			}
 			else{
-				printf("%dx",X.P[i]);	
+				if (i == 2){
+					printf("%dx",X.P[i]);
+				}
+				else if (i == 1){
+					printf("%d",X.P[i]);
+				}
+				else{
+					printf("%dx^%d",X.P[i],i-1);
+				}
 			}
-			
-		}
-		else if (i == X.nb_coef && X.P[i] > 0){
-			printf("%dx^%d",X.P[i],i-1);
-		}
-		else if (i == 1){
-			if (X.P[i] > 0){
-				printf("+%d",X.P[i]);
-			}
-			else{
-				printf("%d",X.P[i]);	
-			}
-		}
-		else if (X.P[i] > 0){
-			printf("+%dx^%d",X.P[i],i-1);
-		}
-		else{
-			printf("%dx^%d",X.P[i],i-1);
+			counter++;
 		}
 	}
 }
@@ -119,21 +136,26 @@ Poly prod_poly(Poly X, Poly X2){
 	}
 	return pX;
 }
-Poly div_poly(Poly X,Poly X2){
-	Poly divX;
+Poly div_poly(Poly* divX,Poly X,Poly X2){
+	Poly reste;
 	if (X.nb_coef > X2.nb_coef){
-		int i=0,j;
-		divX.nb_coef = X.nb_coef - X2.nb_coef;
-		divX.P = (int*) malloc(divX.nb_coef * sizeof(int *));
-		while(X.nb_coef-i>=X2.nb_coef){
-			divX.P[X.nb_coef-X2.nb_coef-i]=X.P[X.nb_coef-i]/X2.P[X2.nb_coef];//division
-           		for(j=i;j<=X2.nb_coef+i;j++){
-               			X.P[X.nb_coef-j]=X.P[X.nb_coef-j]-X2.P[X2.nb_coef-j]*divX.P[i];//reste
+		int i=0,j,g;
+		//divX->nb_coef = X.nb_coef - X2.nb_coef + 1;
+		//divX->P = (int*) malloc(divX->nb_coef * sizeof(int *));
+		reste.nb_coef = X.nb_coef;
+		reste.P = (int*) malloc(reste.nb_coef * sizeof(int *));
+		for (g=X.nb_coef;g>0;g--){
+			reste.P[g]=X.P[g];
+		}
+		while(reste.nb_coef-i>=X2.nb_coef){
+			divX->P[X.nb_coef-X2.nb_coef-i + 1]=reste.P[X.nb_coef-i]/X2.P[X2.nb_coef];//division x^3+2x²-x-2 | x²+0x+1	1) 
+			for(j=0;j<X2.nb_coef+i;j++){// i=1 j=1 4
+				reste.P[X.nb_coef-j-i]=reste.P[X.nb_coef-j-i]-X2.P[X2.nb_coef-j]*divX->P[X.nb_coef-X2.nb_coef-i+1];//reste
            		}
 			i++;
     		}
 	}	
-	return divX;
+	return reste;
 }
 ////////////////////////////////
 //
@@ -191,9 +213,16 @@ int main(void){
 		}
 		if (option == 'f'){
 			Poly divX;
-			divX=div_poly(X,X2);
-			printf("f(x)/g(x)=");
+			Poly reste;
+			//reste.nb_coef = X.nb_coef;
+			//reste.P = (int*) malloc(reste.nb_coef * sizeof(int *));
+			divX.nb_coef = X.nb_coef - X2.nb_coef + 1;
+			divX.P = (int*) malloc(divX.nb_coef * sizeof(int *));
+			reste=div_poly(&divX,X,X2);
+			printf("\nf(x)/g(x)=");
 			print_poly(divX);
+			printf("\nReste:");
+			print_poly(reste);
 		}
 	}
 	else{
