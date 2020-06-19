@@ -2,20 +2,20 @@
 #include <stdlib.h>
 typedef struct{
 	int nb_coef;
-	int* P;
+	float* P;
 } Poly;
 // Fonctions d'interaction avec l'utilisateur
 Poly ask_poly(){
 	Poly X;
-	int i,temp;
+	int i;
+	float temp;
 	printf("Nombre de coefficients:");
-	scanf("%d",&temp);
-	X.nb_coef = temp;
-	X.P = (int*) malloc(X.nb_coef * sizeof(int *));
+	scanf("%d",&X.nb_coef);
+	X.P = (float*) malloc(X.nb_coef * sizeof(float *));
 	printf("\nEntrez les coefficents en commencant par le degré le plus haut.\n");
 	for (i=X.nb_coef;i>0;i--){
 		printf("x^%d:",i-1);
-		scanf("%d",&temp);
+		scanf("%e",&temp);
 		X.P[i] = temp;
 	}
 	return X;
@@ -58,13 +58,13 @@ void print_poly(Poly X){
 			}
 			else{
 				if (i == 2){
-					printf("%dx",X.P[i]);
+					printf("%ex",X.P[i]);
 				}
 				else if (i == 1){
-					printf("%d",X.P[i]);
+					printf("%e",X.P[i]);
 				}
 				else{
-					printf("%dx^%d",X.P[i],i-1);
+					printf("%ex^%d",X.P[i],i-1);
 				}
 			}
 			counter++;
@@ -74,8 +74,9 @@ void print_poly(Poly X){
 //////////////////////////
 //// Fonctions math ////
 
-int eval_poly(Poly X,int x){
-	int i,eval,monome,j;
+float eval_poly(Poly X,float x){
+	int i,j;
+	float monome,eval;
 	for (i=X.nb_coef;i>0;i--){
 		monome=X.P[i];
 		// Calcul de l'exposant
@@ -90,7 +91,7 @@ Poly deriv_poly(Poly X){
 	Poly dX;
 	int i;
 	dX.nb_coef = X.nb_coef - 1;
-	dX.P = (int*) malloc(dX.nb_coef * sizeof(int *));
+	dX.P = (float*) malloc(dX.nb_coef * sizeof(float *));
 	for (i=dX.nb_coef;i>0;i--){
 		dX.P[i] = X.P[i+1]*i;
 	}
@@ -110,7 +111,7 @@ Poly sum_poly(Poly X,Poly X2){
 		Xmin=X;
 	}
 	sX.nb_coef=Xmax.nb_coef;
-	sX.P = (int*) malloc(sX.nb_coef * sizeof(int *));
+	sX.P = (float*) malloc(sX.nb_coef * sizeof(float *));
 
 	for (i=Xmax.nb_coef;i>0;i--){
 		if (i > Xmin.nb_coef){
@@ -126,7 +127,7 @@ Poly prod_poly(Poly X, Poly X2){
 	Poly pX;
 	int i,j,k;
 	pX.nb_coef = X.nb_coef + X2.nb_coef - 1;
-	pX.P = (int*) malloc(pX.nb_coef * sizeof(int *));
+	pX.P = (float*) malloc(pX.nb_coef * sizeof(float *));
 	for (k=pX.nb_coef;k<0;i++){
 		pX.P[i] = 0;
 	}
@@ -144,7 +145,7 @@ Poly div_poly(Poly* divX,Poly X,Poly X2){
 		//divX->nb_coef = X.nb_coef - X2.nb_coef + 1;
 		//divX->P = (int*) malloc(divX->nb_coef * sizeof(int *));
 		reste.nb_coef = X.nb_coef;
-		reste.P = (int*) malloc(reste.nb_coef * sizeof(int *));
+		reste.P = (float*) malloc(reste.nb_coef * sizeof(float *));
 		for (g=X.nb_coef;g>0;g--){
 			reste.P[g]=X.P[g];
 		}

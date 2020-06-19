@@ -13,11 +13,11 @@ int main(void){
 		print_poly(X);
 		printf("\n");
 		if (option == 'b'){
-			int x;
+			float x;
 			printf(" --> x=");
-			scanf("%d",&x);
-			int eval = eval_poly(X,x);
-			printf("f(%d)=%d\n",x,eval);
+			scanf("%e",&x);
+			float eval = eval_poly(X,x);
+			printf("f(%e)=%e\n",x,eval);
 		}
 		if (option == 'c'){
 			Poly dX;	
@@ -58,7 +58,7 @@ int main(void){
 			//reste.nb_coef = X.nb_coef;
 			//reste.P = (int*) malloc(reste.nb_coef * sizeof(int *));
 			divX.nb_coef = X.nb_coef - X2.nb_coef + 1;
-			divX.P = (int*) malloc(divX.nb_coef * sizeof(int *));
+			divX.P = (float*) malloc(divX.nb_coef * sizeof(float *));
 			reste=div_poly(&divX,X,X2);
 			printf("\nf(x)/g(x)=");
 			print_poly(divX);
