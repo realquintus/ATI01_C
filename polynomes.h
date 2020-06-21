@@ -76,7 +76,7 @@ void print_poly(Poly X){
 
 float eval_poly(Poly X,float x){
 	int i,j;
-	float monome,eval;
+	float monome,eval=0;
 	for (i=X.nb_coef;i>0;i--){
 		monome=X.P[i];
 		// Calcul de l'exposant
